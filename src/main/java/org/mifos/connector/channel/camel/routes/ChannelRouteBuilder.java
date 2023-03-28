@@ -705,7 +705,7 @@ public class ChannelRouteBuilder extends ErrorHandlerRouteBuilder {
 
     private void notificationRoutes(){
         from("rest:POST:/channel/sendNotifications")
-                .id("notification")
+                .id("notification-messagegateway")
                 .log(LoggingLevel.INFO, "Notification Workflow Started")
                 .process(exchange -> {
                     String notificationBodyString = exchange.getIn().getBody(String.class);
@@ -719,7 +719,7 @@ public class ChannelRouteBuilder extends ErrorHandlerRouteBuilder {
                     extraVariables.put("originDate",body.getLong("originDate"));
                     extraVariables.put("messageType",body.getString("messageType"));
                     extraVariables.put("parentWorkflowId",body.getString("parentWorkflowId"));
-                    extraVariables.put("internalId",body.getLong("internalId"));
+//                    extraVariables.put("internalId",body.getLong("internalId"));
 
                     String transactionId = zeebeProcessStarter.startZeebeWorkflow(notificationFlow,
                             exchange.getIn().getBody(String.class),
