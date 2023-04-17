@@ -741,6 +741,7 @@ public class ChannelRouteBuilder extends ErrorHandlerRouteBuilder {
                     extraVariables.put("originDate",body.getLong("originDate"));
                     extraVariables.put("messageType",body.getString("messageType"));
                     extraVariables.put("parentWorkflowId",body.getString("parentWorkflowId"));
+                    extraVariables.put("type",body.getString("type"));
 //                    extraVariables.put("internalId",body.getLong("internalId"));
 
                     String transactionId = zeebeProcessStarter.startZeebeWorkflow(notificationFlow,
