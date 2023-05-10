@@ -1,5 +1,5 @@
 camel:
-  server-port: 5000
+  server-port: 5004
   springboot:
     main-run-controller: true
   dataformat:
@@ -49,6 +49,7 @@ bpmn:
     international-remittance-payee: "international_remittance_payee_process-{dfspid}"
     international-remittance-payer: "international_remittance_payer_process-{dfspid}"
     inboundTransactionReq-flow: "mpesa_flow_{ams}-{dfspid}"
+    notification: "notification-messagegateway"
 
 ams:
   groups:
