@@ -15,4 +15,5 @@ public class NotificationDTO {
     private String parentWorkflowId;
     private String deliveryMessage;
     private String tenant;
+    private String type;
 }
