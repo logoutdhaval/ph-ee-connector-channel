@@ -1,5 +1,5 @@
 camel:
-  server-port: 5000
+  server-port: 5001
   springboot:
     main-run-controller: true
   dataformat:
@@ -99,7 +99,7 @@ destination:
 redis:
   host: "127.0.0.1"
   port: 6379
-  password: "Wu392kjHXl"
+  password: "uXYYCBlAt9"
   database: 1
   cacheRetencyDuration: 30 # in days
   idempotency:
