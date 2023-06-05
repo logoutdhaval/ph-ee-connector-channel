@@ -99,11 +99,7 @@ destination:
 redis:
   host: "127.0.0.1"
   port: 6379
-<<<<<<< Updated upstream
-  password: "RHVViU1ip9"
-=======
   password: "Wu392kjHXl"
->>>>>>> Stashed changes
   database: 1
   cacheRetencyDuration: 30 # in days
   idempotency:
