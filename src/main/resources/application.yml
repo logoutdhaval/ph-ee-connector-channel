@@ -67,7 +67,7 @@ zeebe:
 #    number-of-workers: 5
 #    evenly-allocated-max-jobs: "#{${zeebe.client.max-execution-threads} / ${zeebe.client.number-of-workers}}"
   broker:
-    contactpoint: "localhost:26500"
+    contactpoint: "zeebe-zeebe-gateway:26500"
 
 rest:
   authorization:
@@ -99,7 +99,11 @@ destination:
 redis:
   host: "127.0.0.1"
   port: 6379
+<<<<<<< Updated upstream
   password: "RHVViU1ip9"
+=======
+  password: "Wu392kjHXl"
+>>>>>>> Stashed changes
   database: 1
   cacheRetencyDuration: 30 # in days
   idempotency:
