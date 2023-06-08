@@ -1,5 +1,5 @@
 camel:
-  server-port: 5000
+  server-port: 5001
   springboot:
     main-run-controller: true
   dataformat:
@@ -61,7 +61,7 @@ zeebe:
 #    number-of-workers: 5
 #    evenly-allocated-max-jobs: "#{${zeebe.client.max-execution-threads} / ${zeebe.client.number-of-workers}}"
   broker:
-    contactpoint: "localhost:26500"
+    contactpoint: "g2pconnect-zeebe-gateway:26500"
 
 rest:
   authorization:
