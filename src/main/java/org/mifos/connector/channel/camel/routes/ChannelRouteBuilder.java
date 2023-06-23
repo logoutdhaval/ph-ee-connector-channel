@@ -100,6 +100,10 @@ public class ChannelRouteBuilder extends ErrorHandlerRouteBuilder {
     private String timer;
     private String restAuthHeader;
     String destinationDfspId;
+    private String paygopsHost;
+
+    private String rosterHost;
+    private String notificationFlow;
 
     public ChannelRouteBuilder(@Value("#{'${dfspids}'.split(',')}") List<String> dfspIds,
                                @Value("${bpmn.flows.payment-transfer}") String paymentTransferFlow,
@@ -116,7 +120,8 @@ public class ChannelRouteBuilder extends ErrorHandlerRouteBuilder {
                                @Value("${mpesa.notification.failure.enabled}") Boolean isNotificationFailureServiceEnabled,
                                @Value("${timer}") String timer,
                                @Value("${rest.authorization.header}") String restAuthHeader,
-                               @Value("${destination.dfspid}") String destinationDfspId,
+
+                               @Value("${bpmn.flows.notification}") String notificationFlow,
                                ZeebeClient zeebeClient,
                                ZeebeProcessStarter zeebeProcessStarter,
                                @Autowired(required = false) AuthProcessor authProcessor,
@@ -145,6 +150,7 @@ public class ChannelRouteBuilder extends ErrorHandlerRouteBuilder {
         this.isNotificationFailureServiceEnabled = isNotificationFailureServiceEnabled;
         this.timer = timer;
         this.restAuthHeader = restAuthHeader;
+        this.notificationFlow = notificationFlow;
         this.operationsAuthEnabled = operationsAuthEnabled;
         this.destinationDfspId = destinationDfspId;
     }
@@ -161,6 +167,7 @@ public class ChannelRouteBuilder extends ErrorHandlerRouteBuilder {
         workflowRoutes();
         acknowledgementRoutes();
         inboundTransferC2bImplementationRoutes();
+        notificationRoutes();
     }
     private void handleExceptions(){
         onException(BeanValidationException.class)
@@ -719,6 +726,33 @@ public class ChannelRouteBuilder extends ErrorHandlerRouteBuilder {
                     JSONObject response = new JSONObject();
                     response.put("transactionId", transactionId);
                     e.getIn().setBody(response.toString());
+                });
+    }
+
+    private void notificationRoutes(){
+        from("direct:sendNotifications")
+                .id("notification-messagegateway")
+                .log(LoggingLevel.INFO, "Notification Workflow Started")
+                .process(exchange -> {
+                    String notificationBodyString = exchange.getIn().getBody(String.class);
+                    logger.info("Payload : {}",notificationBodyString);
+                    JSONObject body = new JSONObject(notificationBodyString);
+                    Map<String, Object> extraVariables = new HashMap<>();
+                    extraVariables.put("accountId", body.getString("account"));
+                    extraVariables.put(TRANSACTION_ID, body.getString("account"));
+                    extraVariables.put("amount", body.getString("amount"));
+                    extraVariables.put("phoneNumber", body.getString("phoneNumber"));
+                    extraVariables.put("originDate",body.getLong("originDate"));
+                    extraVariables.put("messageType",body.getString("messageType"));
+                    extraVariables.put("parentWorkflowId",body.getString("parentWorkflowId"));
+//                    extraVariables.put("internalId",body.getLong("internalId"));
+
+                    String transactionId = zeebeProcessStarter.startZeebeWorkflow(notificationFlow,
+                            exchange.getIn().getBody(String.class),
+                            extraVariables);
+                    JSONObject response = new JSONObject();
+                    response.put("transactionId", transactionId);
+                    exchange.getIn().setBody(response.toString());
                 });
     }
 
